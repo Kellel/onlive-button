@@ -2,6 +2,8 @@
 
 #include <Adafruit_SH110X.h>
 #include "button.h"
+#include "wifi_icon.h"
+#include "power_icon.h"
 
 /*
  * Main interface It should look something like the following
@@ -28,12 +30,11 @@
  */
 
 
-const char* ssid = "WIFI1.0";
-const char* password = "jarjarbinks";
 
 class Interface{
   public:
-    Interface(Adafruit_SH1107 *d, unsigned int left_button, unsigned int submit_button, unsigned int right_button);
+    Interface(Adafruit_SH1107 *d, WifiComponent * wifi_icon, PowerComponent * power_icon, Button * left_button, Button * submit_button, Button * right_button);
+    void input();
     void Inc();
     void Dec();
     void draw();
@@ -44,5 +45,6 @@ class Interface{
     Button * right;
     unsigned int time = 0;
     unsigned int step = 15;
-
+    WifiComponent * wifi_component;
+    PowerComponent * power_component;
 };
