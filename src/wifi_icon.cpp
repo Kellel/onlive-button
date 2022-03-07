@@ -1,7 +1,6 @@
 #include <Adafruit_SH110X.h>
 
 #include "wifi_icon.h"
-#include "config.h"
 
 #define net_wifi_1_width 16
 #define net_wifi_1_height 16
@@ -40,11 +39,19 @@ static unsigned char net_wifi_none_bits[] = {
 
 void WifiComponent::reconnect()
 {
+    String ssid = SSID;
+    String password = PASSWORD;
+
     WiFi.disconnect();
     Serial.print("Connecting to wifi: ");
     Serial.println(ssid);
 
-    WiFi.begin(ssid, password);
+    WiFi.begin(ssid.c_str(), password.c_str());
+}
+
+void WifiComponent::disconnect()
+{
+    WiFi.disconnect();
 }
 
 WifiComponent::WifiComponent(unsigned int pos_x, unsigned int pos_y)
@@ -124,4 +131,8 @@ void WifiComponent::draw(Adafruit_SH1107 *d)
     }
 
     lastStatus = status;
+}
+
+bool WifiComponent::connected() {
+    return lastStatus == WL_CONNECTED ? true : false;
 }

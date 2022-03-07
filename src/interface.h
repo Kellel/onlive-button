@@ -4,6 +4,7 @@
 #include "button.h"
 #include "wifi_icon.h"
 #include "power_icon.h"
+#include "config.h"
 
 /*
  * Main interface It should look something like the following
@@ -35,16 +36,19 @@ class Interface{
   public:
     Interface(Adafruit_SH1107 *d, WifiComponent * wifi_icon, PowerComponent * power_icon, Button * left_button, Button * submit_button, Button * right_button);
     void input();
+    void draw();
+    unsigned long last_input();
+  private:
+    void submit_duration();
     void Inc();
     void Dec();
-    void draw();
-  private:
     Adafruit_SH1107* d;
     Button * left;
     Button * submit;
     Button * right;
-    unsigned int time = 0;
+    unsigned int time = 15;
     unsigned int step = 15;
+    unsigned long last_state_change = millis();
     WifiComponent * wifi_component;
     PowerComponent * power_component;
 };

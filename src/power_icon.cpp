@@ -47,10 +47,10 @@ void PowerComponent::measure()
     // so lets convert that to voltage
 
     float voltage = value * (3.3 / 4094.0) * 2;
-    Serial.print("Bat reading: ");
-    Serial.println(value);
-    Serial.print("Bat voltage: ");
-    Serial.println(voltage);
+    //Serial.print("Bat reading: ");
+    //Serial.println(value);
+    //Serial.print("Bat voltage: ");
+    //Serial.println(voltage);
 
     if (voltage > 4.5)
     {

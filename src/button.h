@@ -11,7 +11,7 @@ class Button
     Button(uint8_t button) {
       btn = button;
       state = 0;
-      pinMode(btn, INPUT_PULLUP);
+      pinMode(btn, INPUT);
     }
     bool debounce() {
       state = (state<<1) | digitalRead(btn) | 0xfe00;

@@ -1,15 +1,40 @@
 #include <Adafruit_SH110X.h>
+#include <HTTPClient.h>
 
-#include "power_icon.h"
 #include "interface.h"
-#include "button.h"
 
 #define STACK_SIZE 200
+
+void Interface::submit_duration()
+{
+    HTTPClient http;
+
+    String host = HOST;
+    uint16_t port = PORT;
+    String url = "/?state=true&duration=";
+
+    http.begin(host, port, url + String(time));
+
+    int resp_code = http.PUT(NULL, 0);
+
+    if (resp_code > 0) {
+        Serial.print("Server Response: ");
+        Serial.println(resp_code);
+        String payload = http.getString();
+        Serial.println(payload);
+    } 
+    else 
+    {
+        Serial.print("Error: ");
+        Serial.println(http.errorToString(resp_code).c_str());
+    }
+}
 
 Interface::Interface(Adafruit_SH1107 *display, WifiComponent * wifi_icon, PowerComponent * power_icon, Button * left_button, Button * submit_button, Button * right_button)
 {
     d = display;
-    time = 0;
+    time = 15;
+    last_state_change = millis();
     left = left_button;
     right = right_button;
     submit = submit_button;
@@ -17,16 +42,29 @@ Interface::Interface(Adafruit_SH1107 *display, WifiComponent * wifi_icon, PowerC
     power_component = power_icon;
 }
 
+unsigned long Interface::last_input()
+{
+    return last_state_change;
+}
+
 void Interface::input()
 {
     if (left->debounce())
     {
+        last_state_change = millis();
         Dec();
     }
 
     if (right->debounce())
     {
+        last_state_change = millis();
         Inc();
+    }
+
+    if (submit->debounce() && wifi_component->connected())
+    {
+        last_state_change = millis();
+        submit_duration();
     }
 
     power_component->measure();
@@ -92,6 +130,6 @@ void Interface::draw()
     d->setCursor(11, 115);
     d->print("-  O  +");
 
-    Serial.print("Time: ");
-    Serial.println(time);
+    //Serial.print("Time: ");
+    //Serial.println(time);
 }

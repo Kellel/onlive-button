@@ -7,3 +7,6 @@
 [submodule "lib/Adafruit_SH110x"]
 	path = lib/Adafruit_SH110x
 	url = https://github.com/adafruit/Adafruit-SH110x.git
+[submodule "lib/esp-idf"]
+	path = lib/esp-if
+	url = git@github.com:espressif/esp-idf.git
